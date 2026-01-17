@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+//   url      = env("DATABASE_URL")
+}
+
+enum ProductStatus {
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING     // Order created, payment not initiated
+  INITIATED   // Redirected to payment gateway
+  PAID        // Payment successful
+  FAILED      // Payment failed
+  CANCELLED   // User cancelled payment
+  REFUNDED    // Payment refunded
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+  SSLCOMMERZ
+  BKASH
+  NAGAD
+  STRIPE
+}
+
+
+
+enum Role {
+  USER
+  ADMIN
+  VENDOR
+  
+}
+
+enum InventoryAction {
+  STOCK_IN
+  STOCK_OUT
+  ADJUSTMENT
+  RETURN
+  DAMAGE
+}
+enum InventorySource {
+  ORDER
+  ADMIN
+  SYSTEM
+  SUPPLIER
+}

@@ -1,0 +1,45 @@
+// model Order {
+//   id        String   @id @default(uuid())
+//   userId    String?
+//   user      User?    @relation(fields: [userId], references: [id])
+//   orderNumber     String   @unique
+//   customerName    String
+//   customerEmail   String
+//   customerPhone   String
+//   shippingAddress String
+//   totalAmount     Float
+//   discountAmount  Float    @default(0)
+//   shippingAmount  Float    @default(0)
+//   finalAmount     Float
+//   status          OrderStatus @default(PENDING)
+//   trackingNumber  String?
+//   notes           String?
+//   invoiceUrl      String?
+//   paymentMethod String?
+// paymentStatus PaymentStatus @default(PENDING)
+// payments Payment[]
+
+//   orderitems        OrderItem[]
+
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
+
+// model OrderItem {
+//   id          String   @id @default(uuid())
+//   quantity    Int
+//   // unitPrice   Float
+//   totalPrice  Float
+  
+//   // Relations
+//   orderId     String
+//   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+//   productId      String
+//   product        Product @relation(fields: [productId], references: [id])
+//   createdAt   DateTime @default(now())
+  
+//   @@unique([orderId, productId])
+//   @@map("order_item")
+// }
+

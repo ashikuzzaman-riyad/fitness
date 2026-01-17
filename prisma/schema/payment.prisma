@@ -1,0 +1,25 @@
+
+
+// model Payment {
+//   id              String        @id @default(uuid())
+
+//   orderId         String
+//   order           Order         @relation(fields: [orderId], references: [id])
+
+//   paymentMethod   PaymentMethod
+//   paymentStatus   PaymentStatus @default(PENDING)
+
+//   amount          Float
+//   currency        String        @default("BDT")
+
+//   transactionId   String?       @unique   // Gateway transaction ID
+//   gatewayResponse Json?
+
+//   paidAt          DateTime?
+//   refundedAt      DateTime?
+
+//   createdAt       DateTime      @default(now())
+//   updatedAt       DateTime      @updatedAt
+
+//   @@index([orderId])
+// }
