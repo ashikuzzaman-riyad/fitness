@@ -78,6 +78,30 @@ export const updateProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+
+export const getInventoryLogs = catchAsync(async (req: Request, res: Response) => {
+  const filters = {
+    productId: req.query.productId as string,
+    variantId: req.query.variantId as string,
+    action: req.query.action as string,
+    source: req.query.source as string,
+    page: req.query.page ? Number(req.query.page) : undefined,
+    limit: req.query.limit ? Number(req.query.limit) : undefined,
+    sortBy: req.query.sortBy as string,
+    sortOrder: req.query.sortOrder as "asc" | "desc",
+  };
+
+  const result = await ProductService.getInventoryLogs(filters);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Inventory logs fetched successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
 // Delete Product
 export const deleteProduct = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

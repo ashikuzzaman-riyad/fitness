@@ -10,6 +10,7 @@ router.get("/", productController.getProducts);
 // router.get("/:id", productController.getProductById);
 router.get("/:slug", productController.getProductBySlug);
 router.put("/:id", productController.updateProduct);
+router.get("/inventory/logs", productController.getInventoryLogs)
 router.delete("/:id", productController.deleteProduct);
 
 export default router;

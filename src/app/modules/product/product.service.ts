@@ -1,7 +1,7 @@
 // src/modules/product/product.service.ts
 import makeSlug from "../../helper/makeSlug";
 import { prisma } from "../../shared/prisma";
-import { ProductFilters } from "./product.types";
+import { ProductFilters, GetInventoryFilters } from "./product.types";
 
 // CREATE PRODUCT WITH NESTED RELATIONS AND INVENTORY LOG
 export const createProduct = async (data: any) => {
@@ -163,6 +163,7 @@ export const getAllProducts = async (filters: ProductFilters) => {
         salePrice: true,
         basePrice: true,
         isActive: true,
+        isDeleted: true,
         images: {
           select: {
             url: true,
@@ -281,6 +282,45 @@ export const updateProduct = async (id: string, data: any) => {
       inventoryLogs: true,
     },
   });
+};
+
+export const getInventoryLogs = async (filters: GetInventoryFilters) => {
+  const page = filters.page || 1;
+  const limit = filters.limit || 10;
+  const skip = (page - 1) * limit;
+
+  const where: any = {};
+  if (filters.productId) where.productId = filters.productId;
+  if (filters.variantId) where.variantId = filters.variantId;
+  if (filters.action) where.action = filters.action;
+  if (filters.source) where.source = filters.source;
+
+  const orderBy: any = {};
+  if (filters.sortBy) orderBy[filters.sortBy] = filters.sortOrder || "asc";
+
+  const [logs, total] = await prisma.$transaction([
+    prisma.inventoryLog.findMany({
+      where,
+      orderBy,
+      skip,
+      take: limit,
+      include: {
+        product: true,
+        variant: true,
+      },
+    }),
+    prisma.inventoryLog.count({ where }),
+  ]);
+
+  return {
+    data: logs,
+    meta: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 

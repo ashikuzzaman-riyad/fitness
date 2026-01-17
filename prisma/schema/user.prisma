@@ -5,7 +5,7 @@ model User {
   password  String
   role      Role     @default(USER)
 
-  // orders Order[]
+  orders Order[]
 
   isDeleted      Boolean  @default(false)
   deletedAt      DateTime?

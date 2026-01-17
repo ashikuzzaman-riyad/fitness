@@ -14,6 +14,7 @@ export interface CreateProductInput {
   categoryId?: string;
   images?: string[];
   isActive?: boolean;
+  isDeleted?: boolean;
 }
 
 export interface UpdateProductInput {
@@ -43,4 +44,14 @@ export interface ProductFilters {
   sortOrder?: "asc" | "desc";
 }
 
+export interface GetInventoryFilters {
+  productId?: string;
+  variantId?: string;
+  action?: string;
+  source?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
 

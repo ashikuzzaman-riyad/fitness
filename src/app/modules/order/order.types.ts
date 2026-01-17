@@ -1,30 +1,21 @@
 // src/modules/order/order.types.ts
-
-export interface CreateOrderInput {
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  shippingAddress: string;
-  totalAmount: number;
-  items: OrderItemInput[];
-}
-
-export interface OrderItemInput {
+export interface IOrderItemInput {
   productId: string;
+  variantId?: string;
   quantity: number;
   unitPrice: number;
+   variants?: string[];
 }
 
-export interface UpdateOrderInput {
-  status?: 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
-  trackingNumber?: string;
-}
+export interface IOrderInput {
+  userId: string;
+  orderNumber: string;
+  totalAmount: number;
+  discountAmount?: number;
+  finalAmount: number;
+  orderItems: IOrderItemInput[];
+ 
 
-export interface OrderFilters {
-  status?: string;
-  customerEmail?: string;
-  startDate?: Date;
-  endDate?: Date;
-  page?: number;
-  limit?: number;
+
+ 
 }
