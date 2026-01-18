@@ -5,6 +5,7 @@ import * as categoryService from './category.service';
 import { catchAsync, sendResponse } from '../../shared';
 import { CreateCategoryInput, UpdateCategoryInput } from './category.types';
 
+
 // CREATE
 export const createCategory = catchAsync(async (req: Request, res: Response) => {
   const category = await categoryService.createCategory(req.body as CreateCategoryInput);
@@ -43,25 +44,25 @@ export const getAllCategories = catchAsync(async (req: Request, res: Response) =
 });
 
 // GET BY ID
-export const getCategoryById = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const category = await categoryService.getCategoryById(id);
+// export const getCategoryById = catchAsync(async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   const category = await categoryService.getCategoryById(id);
   
-  if (!category) {
-    return sendResponse(res, {
-      statusCode: 404,
-      success: false,
-      message: 'Category not found',
-    });
-  }
+//   if (!category) {
+//     return sendResponse(res, {
+//       statusCode: 404,
+//       success: false,
+//       message: 'Category not found',
+//     });
+//   }
   
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Category fetched successfully',
-    data: category,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: 200,
+//     success: true,
+//     message: 'Category fetched successfully',
+//     data: category,
+//   });
+// });
 
 // GET BY SLUG
 export const getCategoryBySlug = catchAsync(async (req: Request, res: Response) => {
@@ -83,6 +84,21 @@ export const getCategoryBySlug = catchAsync(async (req: Request, res: Response) 
     data: category,
   });
 });
+
+
+export const getProductsByCategorySlug = catchAsync(
+  async (req: Request, res: Response) => {
+    const { slug } = req.params;
+
+    const products = await categoryService.getProductsByCategorySlug(slug);
+
+    res.status(200).json({
+      success: true,
+      message: "Products fetched successfully",
+      data: products,
+    });
+  }
+);
 
 // UPDATE
 export const updateCategory = catchAsync(async (req: Request, res: Response) => {

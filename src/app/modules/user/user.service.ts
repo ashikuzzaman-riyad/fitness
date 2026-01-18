@@ -2,7 +2,7 @@
 import { prisma } from "../../shared/prisma";
 import { Role } from "@prisma/client";
 
-const createUser = async (payload: {
+export const createUser = async (payload: {
   name: string;
   email: string;
   password: string;
@@ -18,19 +18,19 @@ const createUser = async (payload: {
   });
 };
 
-const getAllUsers = async () => {
+export const getAllUsers = async () => {
   return prisma.user.findMany();
 };
 
-const getUserById = async (id: string) => {
+export const getUserById = async (id: string) => {
   return prisma.user.findUnique({
     where: { id },
   });
 };
 
-const updateUser = async (
+export const updateUser = async (
   id: string,
-  payload: { name?: string; email?: string; password?: string; role?: Role }
+  payload: { name?: string; email?: string; password?: string; role?: Role },
 ) => {
   return prisma.user.update({
     where: { id },
@@ -40,9 +40,8 @@ const updateUser = async (
   });
 };
 
-export const UserService = {
-  createUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
+export const deleteUser = async (id: string) => {
+  return prisma.user.delete({
+    where: { id },
+  });
 };

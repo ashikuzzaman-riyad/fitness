@@ -4,11 +4,12 @@ import httpStatus from "http-status";
 
 import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
-import { UserService } from "./user.service";
+import * as userService from "./user.service";
+import { request } from "http";
 
 
-const createUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await UserService.createUser(req.body);
+export const createUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.createUser(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -18,8 +19,8 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllUsers = catchAsync(async (_req: Request, res: Response) => {
-  const result = await UserService.getAllUsers();
+export const getAllUsers = catchAsync(async (_req: Request, res: Response) => {
+  const result = await userService.getAllUsers();
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -30,10 +31,10 @@ const getAllUsers = catchAsync(async (_req: Request, res: Response) => {
 });
 
 
-const getUserById = catchAsync(async (req: Request, res: Response) => {
+export const getUserById = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await UserService.getUserById(id);
+  const result = await userService.getUserById(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -44,10 +45,10 @@ const getUserById = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-const updateUser = catchAsync(async (req: Request, res: Response) => {
+export const updateUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await UserService.updateUser(id, req.body);
+  const result = await userService.updateUser(id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,9 +59,16 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-export const UserController = {
-  createUser,
-  getAllUsers,
-  getUserById,
-  updateUser,
-};
+export const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await userService.deleteUser(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "user deleted successfully",
+    data: result,
+  });
+});
+

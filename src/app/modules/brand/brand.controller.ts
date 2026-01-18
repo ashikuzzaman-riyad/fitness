@@ -42,25 +42,25 @@ export const getAllBrands = catchAsync(async (req: Request, res: Response) => {
 });
 
 // GET BY ID
-export const getBrandById = catchAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const brand = await brandService.getBrandById(id);
+// export const getBrandById = catchAsync(async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   const brand = await brandService.getBrandById(id);
   
-  if (!brand) {
-    return sendResponse(res, {
-      statusCode: 404,
-      success: false,
-      message: 'Brand not found',
-    });
-  }
+//   if (!brand) {
+//     return sendResponse(res, {
+//       statusCode: 404,
+//       success: false,
+//       message: 'Brand not found',
+//     });
+//   }
   
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: 'Brand fetched successfully',
-    data: brand,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: 200,
+//     success: true,
+//     message: 'Brand fetched successfully',
+//     data: brand,
+//   });
+// });
 
 // GET BY SLUG
 export const getBrandBySlug = catchAsync(async (req: Request, res: Response) => {

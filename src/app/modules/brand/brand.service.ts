@@ -1,20 +1,13 @@
+import makeSlug from "../../helper/makeSlug";
 import { prisma } from "../../shared/prisma";
 
 import { CreateBrandInput, UpdateBrandInput, BrandFilters } from './brand.types';
 
 // Helper to generate slug
-const generateSlug = (name: string): string => {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-};
 
 // CREATE
 export const createBrand = async (data: CreateBrandInput) => {
-  const slug = data.slug || generateSlug(data.name);
+  const slug = data.slug || makeSlug(data.name);
   
   return await prisma.brand.create({
     data: {
@@ -56,11 +49,11 @@ export const getAllBrands = async (filters: BrandFilters) => {
 };
 
 // GET BY ID
-export const getBrandById = async (id: string) => {
-  return await prisma.brand.findUnique({
-    where: { id },
-  });
-};
+// export const getBrandById = async (id: string) => {
+//   return await prisma.brand.findUnique({
+//     where: { id },
+//   });
+// };
 
 // GET BY SLUG
 export const getBrandBySlug = async (slug: string) => {
@@ -72,7 +65,7 @@ export const getBrandBySlug = async (slug: string) => {
 // UPDATE
 export const updateBrand = async (id: string, data: UpdateBrandInput) => {
   if (data.name && !data.slug) {
-    data.slug = generateSlug(data.name);
+    data.slug = makeSlug(data.name);
   }
   
   return await prisma.brand.update({

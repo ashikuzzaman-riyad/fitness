@@ -7,8 +7,8 @@ const router = Router();
 
 router.post('/', brandController.createBrand);
 router.get('/', brandController.getAllBrands);
-router.get('/:id', brandController.getBrandById);
-router.get('/slug/:slug', brandController.getBrandBySlug);
+// router.get('/:id', brandController.getBrandById);
+router.get('/:slug', brandController.getBrandBySlug);
 router.put('/:id', brandController.updateBrand);
 router.delete('/:id', brandController.deleteBrand);
 

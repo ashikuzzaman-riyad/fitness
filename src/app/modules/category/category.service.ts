@@ -1,20 +1,12 @@
 // src/modules/category/category.service.ts
 
+import makeSlug from '../../helper/makeSlug';
 import { prisma } from '../../shared/prisma';
 import { CreateCategoryInput, UpdateCategoryInput, CategoryFilters } from './category.types';
 
-const generateSlug = (name: string): string => {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-};
-
 // CREATE
 export const createCategory = async (data: CreateCategoryInput) => {
-  const slug = data.slug || generateSlug(data.name);
+  const slug = data.slug || makeSlug(data.name);
   
   return await prisma.category.create({
     data: {
@@ -64,15 +56,15 @@ export const getAllCategories = async (filters: CategoryFilters) => {
 };
 
 // GET BY ID
-export const getCategoryById = async (id: string) => {
-  return await prisma.category.findUnique({
-    where: { id },
-    include: {
-      parent: true,
-      children: true,
-    },
-  });
-};
+// export const getCategoryById = async (id: string) => {
+//   return await prisma.category.findUnique({
+//     where: { id },
+//     include: {
+//       parent: true,
+//       children: true,
+//     },
+//   });
+// };
 
 // GET BY SLUG
 export const getCategoryBySlug = async (slug: string) => {
@@ -88,7 +80,7 @@ export const getCategoryBySlug = async (slug: string) => {
 // UPDATE
 export const updateCategory = async (id: string, data: UpdateCategoryInput) => {
   if (data.name && !data.slug) {
-    data.slug = generateSlug(data.name);
+    data.slug = makeSlug(data.name);
   }
   
   return await prisma.category.update({
@@ -96,6 +88,41 @@ export const updateCategory = async (id: string, data: UpdateCategoryInput) => {
     data,
   });
 };
+
+// helper function to all category IDs recursively
+const getAllCategoryIds = async (categoryId: string): Promise<string[]> => {
+  const children = await prisma.category.findMany({
+    where: { parentId: categoryId },
+  });
+
+  let ids = [categoryId];
+
+  for (const child of children) {
+    ids = ids.concat(await getAllCategoryIds(child.id));
+  }
+
+  return ids;
+};
+
+// category Products
+
+export const getProductsByCategorySlug = async (slug: string) => {
+  const Category = await prisma.category.findUnique({
+    where: {slug},
+  })
+  if (!Category) return [];
+
+  const ids = await getAllCategoryIds(Category.id);
+  return prisma.product.findMany({
+    where: {
+      categoryId: {in: ids},
+    },
+    include: {
+      category: true
+    }
+  })
+};
+
 
 // DELETE
 export const deleteCategory = async (id: string) => {
