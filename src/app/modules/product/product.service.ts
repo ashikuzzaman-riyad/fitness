@@ -5,7 +5,22 @@ import { ProductFilters, GetInventoryFilters } from "./product.types";
 
 // CREATE PRODUCT WITH NESTED RELATIONS AND INVENTORY LOG
 export const createProduct = async (data: any) => {
-  const slug = makeSlug(data.name);
+ const baseSlug = makeSlug(data.name);
+  let slug = baseSlug;
+  let count = 1;
+
+  while (true) {
+    const exists = await prisma.category.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!exists) break;
+
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
+
 
   return prisma.$transaction(async (tx) => {
     // 1️⃣ Create Product

@@ -7,8 +7,22 @@ import { CreateBrandInput, UpdateBrandInput, BrandFilters } from './brand.types'
 
 // CREATE
 export const createBrand = async (data: CreateBrandInput) => {
-  const slug = data.slug || makeSlug(data.name);
-  
+   const baseSlug = makeSlug(data.name);
+  let slug = baseSlug;
+  let count = 1;
+
+  while (true) {
+    const exists = await prisma.category.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!exists) break;
+
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
+
   return await prisma.brand.create({
     data: {
       ...data,

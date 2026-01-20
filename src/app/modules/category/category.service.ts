@@ -6,19 +6,36 @@ import { CreateCategoryInput, UpdateCategoryInput, CategoryFilters } from './cat
 
 // CREATE
 export const createCategory = async (data: CreateCategoryInput) => {
-  const slug = data.slug || makeSlug(data.name);
+   const baseSlug = makeSlug(data.name);
+  let slug = baseSlug;
+  let count = 1;
+
+  while (true) {
+    const exists = await prisma.category.findUnique({
+      where: { slug },
+      select: { id: true },
+    });
+
+    if (!exists) break;
+
+    slug = `${baseSlug}-${count}`;
+    count++;
+  }
+
   
   return await prisma.category.create({
     data: {
       ...data,
       slug,
     },
+   
   });
+  
 };
 
 // GET ALL
 export const getAllCategories = async (filters: CategoryFilters) => {
-  const { search, isActive, parentId, page = 1, limit = 10 } = filters;
+  const { search, isActive, page = 1, limit = 10 } = filters;
   const skip = (page - 1) * limit;
 
   const where: any = {};
@@ -33,27 +50,28 @@ export const getAllCategories = async (filters: CategoryFilters) => {
   if (isActive !== undefined) {
     where.isActive = isActive;
   }
-  
-  if (parentId) {
-    where.parentId = parentId;
-  }
 
+  // শুধু মূল category fetch কর
   const [categories, total] = await Promise.all([
     prisma.category.findMany({
-      where,
+      where: { ...where, parentId: null }, // মূল category
       skip,
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: {
-        parent: true,
-        children: true,
+        children: { // nested subcategories
+          include: {
+            children: true, // nested deeper
+          },
+        },
       },
     }),
-    prisma.category.count({ where }),
+    prisma.category.count({ where: { ...where, parentId: null } }),
   ]);
 
   return { categories, total, page, limit };
 };
+
 
 // GET BY ID
 // export const getCategoryById = async (id: string) => {
